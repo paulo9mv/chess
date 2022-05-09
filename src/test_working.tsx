@@ -15,12 +15,6 @@ stockfish.addEventListener("message", function (e) {
   }
 });
 
-//stockfish.postMessage("uci");
-
-//stockfish.postMessage("position fen r3k3/1R1ppp2/8/8/8/8/8/1Q2K3 w - - 0 1");
-//stockfish.postMessage("position fen 1r2k3/8/8/8/8/8/3PPPPP/4K2R w K - 0 1");
-//stockfish.postMessage("go depth 10");
-
 const PlayRandomMoveEngine = () => {
   const [game, setGame] = useState(new Chess());
   const [undoCount, setUndoCount] = useState(0);
