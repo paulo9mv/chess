@@ -51,12 +51,12 @@ export const createTodoStore = (): StoreI => {
           return "gafe"
         } else if (Math.abs(i) > 400) {
           return "erro"
-        } else if (Math.abs(i) > 100) {
+        } else if (Math.abs(i) > 80) {
           return "imprecisao"
         } else {
           return "ok"
         }
-      }).shift()
+      })
 
       console.log(impr)
       console.log("expectedPoints", arr)
@@ -130,7 +130,7 @@ export const createTodoStore = (): StoreI => {
         const resultToInt = parseInt(result[0])
         console.log("Mate in:", resultToInt)
 
-        this.expectedPoints[this.currentMove] = Infinity * multiplier
+        this.expectedPoints[this.currentMove] = (Math.sign(resultToInt) * Infinity) * multiplier
 
         return;
       }
