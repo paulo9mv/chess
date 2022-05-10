@@ -7,6 +7,7 @@ export interface StoreI {
   currentPgn: string,
   history: Array<any>,
   currentMove: number,
+  currentMoveOnTheBoard: number,
   expectedPoints: Array<any>,
   foundPoints: Array<any>,
   expectedMoves: Array<any>
@@ -19,7 +20,12 @@ export interface StoreI {
   onScoreFound: any,
   bestMove: string,
   onEvaluateStart: any,
-  printBlunders: any
+  printBlunders: any,
+  startEvaluate: any,
+  move: any,
+  setCurrentMoveOnTheBoard: any,
+  undo: any,
+  isEvaluationFinished: boolean
 }
 
 export const createTodoStore = (): StoreI => {
@@ -33,6 +39,17 @@ export const createTodoStore = (): StoreI => {
     history: [],
     worker: null,
     game: undefined,
+    currentMoveOnTheBoard: 0,
+    isEvaluationFinished: true,
+    setCurrentMoveOnTheBoard(value: number) {
+      this.currentMoveOnTheBoard = value
+    },
+    undo() {
+      this.game?.undo()
+    },
+    move(pos: string) {
+      this.game?.move(pos)
+    },
     printBlunders() {
       const arr = this.expectedPoints.map(i => i)
       const tempArray =this.expectedPoints.map((i, index, arr) => {
@@ -62,6 +79,11 @@ export const createTodoStore = (): StoreI => {
       console.log("expectedPoints", arr)
       console.log("tempArray", tempArray)
     },
+    startEvaluate() {
+      this.startWorker();
+      this.isEvaluationFinished = false;
+      this.onEvaluateStart(this.game?.fen());
+    },
     startWorker() {
       this.worker = new Worker("src/lib/stockfish.js");
 
@@ -84,7 +106,6 @@ export const createTodoStore = (): StoreI => {
       this.game?.move(this.history[this.currentMove]);
       this.currentMove++;
 
-      console.log(this.game?.ascii())
       //console.log(this.game?.game_over())    
 
       if (this.currentMove > this.history.length) {
@@ -92,6 +113,8 @@ export const createTodoStore = (): StoreI => {
         console.log(this.foundPoints)
 
         this.printBlunders()
+
+        this.isEvaluationFinished = true;
 
         return;
       }
@@ -141,7 +164,7 @@ export const createTodoStore = (): StoreI => {
 
       if (!isValidPgn) {
         console.error("Invalid PGN");
-        return;
+        return false;
       }
 
       console.log("Valid PGN");
@@ -149,6 +172,8 @@ export const createTodoStore = (): StoreI => {
       this.game = new Chess();
       this.currentPgn = pgn;
       this.history = tempGame.history()
+
+      return true
     },
   };
 };
