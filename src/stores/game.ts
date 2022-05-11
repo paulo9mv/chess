@@ -29,7 +29,8 @@ export interface StoreI {
   move: any,
   setCurrentMoveOnTheBoard: any,
   undo: any,
-  isEvaluationFinished: boolean
+  isEvaluationFinished: boolean,
+  resetState: any
 }
 
 export const createTodoStore = (): StoreI => {
@@ -84,10 +85,22 @@ export const createTodoStore = (): StoreI => {
 
       impr.shift()
       this.reportMoves = impr
-
-      console.log(impr)
-      console.log("expectedPoints", arr)
-      console.log("tempArray", tempArray)
+    },
+    resetState() {
+      this.currentPgn = ""
+      this.currentMove = 0
+      this.bestMove = ""
+      this.expectedPoints = []
+      this.mateIn = []
+      this.expectedMoves = []
+      this.foundPoints = []
+      this.reportMoves = []
+      this.history = []
+      this.worker = null
+      this.game = undefined
+      this.evaluatedGame = undefined
+      this.currentMoveOnTheBoard = 0
+      this.isEvaluationFinished = true
     },
     startEvaluate() {
       this.startWorker();
@@ -119,8 +132,6 @@ export const createTodoStore = (): StoreI => {
    
 
       if (this.currentMove > this.history.length) {
-        console.log(this.expectedPoints)
-        console.log(this.foundPoints)
 
         this.printBlunders()
 

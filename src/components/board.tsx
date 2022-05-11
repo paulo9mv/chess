@@ -25,7 +25,7 @@ const Board = () => {
 
     console.log(arrows, currentMoveOnTheBoard, arrows[currentMoveOnTheBoard], expectedMoves, history.length)
 
-    return <Chessboard position={todoStore.game?.fen() || 'start'} customArrows={arrows.length ? [arrows[currentMoveOnTheBoard]] : []}/>
+    return <Chessboard position={todoStore.game?.fen() || 'start'} customArrows={arrows.length ? [arrows[currentMoveOnTheBoard]] : []} onPieceDrop={(s,t) => false}/>
 }
 
 export default observer(Board)

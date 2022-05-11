@@ -9,25 +9,21 @@ const InputPgn = () => {
     const todoStore = useTodoStore() as StoreI
     const [text, setText] = useState("")
     const handleVerify = () => {
-        const isValid = todoStore.loadPgn(text)
-
-        if (!isValid) {
-            console.error("Invalid PGN")
-        }
+        todoStore.loadPgn(text)
     }
 
     return (
         <Box>
-            Upload or paste PGN here:
+            Add a valid PGN to start. Use bottom commands to control 
             <TextField
                 id="outlined-multiline-static"
-                label="Multiline"
+                label="PGN"
                 multiline
                 minRows={4}
                 onChange={e => setText(e.target.value)}
                 value={text}
             />
-            <Button onClick={handleVerify}>Verify</Button>
+            <Button variant="contained" color="primary" onClick={handleVerify}>Import</Button>
         </Box>
     )
 }
