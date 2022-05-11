@@ -14,7 +14,8 @@ const InputPgn = () => {
 
     return (
         <Box>
-            Add a valid PGN to start. Use bottom commands to control 
+            Add a valid PGN to start. Use bottom commands to control
+            <Box>
             <TextField
                 id="outlined-multiline-static"
                 label="PGN"
@@ -22,8 +23,13 @@ const InputPgn = () => {
                 minRows={4}
                 onChange={e => setText(e.target.value)}
                 value={text}
+                fullWidth
             />
+            </Box>
+            <Box style={{marginTop: 4}}>
             <Button variant="contained" color="primary" onClick={handleVerify}>Import</Button>
+            </Box>
+            
         </Box>
     )
 }

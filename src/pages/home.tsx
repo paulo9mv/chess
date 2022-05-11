@@ -1,4 +1,4 @@
-import { Grid, LinearProgress } from "@material-ui/core";
+import { Card, Grid, LinearProgress } from "@material-ui/core";
 import { observer } from "mobx-react-lite";
 import BoardContainer from "../components/board_container";
 import AnalysisContainer from "../components/analysis_container";
@@ -10,7 +10,7 @@ const Home = () => {
     const { isEvaluationFinished, reportMoves, history } = todoStore;
 
     return <Grid container spacing={2}>
-        <Grid item xs={12}>Test /// 1. e4 e5 2. Nf3 Qh4 3. Nxe5 Qxe4+ 4. Be2 Qxe5 5. O-O Qf6 6. Re1 Ba3 7. Nxa3 Ne7 8. d4 Qxd4 9. c3 Qh4</Grid>
+        <Grid item xs={12}><Card style={{height: 50, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>{`♟️ Chess Analysis (Stockfish v14.1 🐟)`}</Card></Grid>
         <Grid item xs={12}>
             <Grid container spacing={2}>
                 <Grid item xs={2} />
