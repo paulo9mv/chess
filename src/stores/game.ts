@@ -7,26 +7,25 @@ export interface StoreProps {
   currentMoveOnTheBoard: number,
   game?: ChessInstance,
   evaluatedGame?: ChessInstance,
-  worker: Worker,
+  worker?: Worker,
   reportMoves: Array<MoveStatus>,
-  history: Array<any>,
+  history: Array<string>,
   mateIn: Array<number>,
-  expectedPoints: Array<any>,
-  foundPoints: Array<any>,
-  expectedMoves: Array<any>
-  startWorker: Function
-  loadPgn: Function,
-  onBestMoveFound: Function,
-  onHandleEvent: any,
-  onScoreFound: any,
-  onEvaluateStart: any,
-  printBlunders: any,
-  startEvaluate: any,
-  move: any,
-  setCurrentMoveOnTheBoard: any,
-  undo: any,
+  expectedPoints: Array<number>,
+  foundPoints: Array<number>,
+  expectedMoves: Array<string>,
   isEvaluationFinished: boolean,
-  resetState: any
+  loadPgn: (x: string) => boolean,
+  onBestMoveFound: (x: string) => void,
+  onHandleEvent: (x: MessageEvent) => void,
+  onScoreFound: (x: string) => void,
+  onEvaluateStart: (fen?: string) => void,
+  processResults: () => void,
+  startEvaluate: () => void,
+  move: (pos: string) => void,
+  setCurrentMoveOnTheBoard: (value: number) => void,
+  undo: () => void,
+  resetState: () => void
 }
 
 export const createTodoStore = (): StoreProps => {
@@ -36,7 +35,7 @@ export const createTodoStore = (): StoreProps => {
     currentMoveOnTheBoard: 0,
     game: undefined,
     evaluatedGame: undefined,
-    worker: null,
+    worker: undefined,
     expectedPoints: [],
     mateIn: [],
     expectedMoves: [],
@@ -53,7 +52,7 @@ export const createTodoStore = (): StoreProps => {
     move(pos: string) {
       this.game?.move(pos)
     },
-    printBlunders() {
+    processResults() {
       const arr = this.expectedPoints.map(i => i)
       const tempArray =this.expectedPoints.map((i, index, arr) => {
         if (index === 0) {
@@ -90,85 +89,70 @@ export const createTodoStore = (): StoreProps => {
       this.foundPoints = []
       this.reportMoves = []
       this.history = []
-      this.worker = null
+      this.worker = undefined
       this.game = undefined
       this.evaluatedGame = undefined
       this.currentMoveOnTheBoard = 0
       this.isEvaluationFinished = true
     },
     startEvaluate() {
-      this.startWorker();
       this.isEvaluationFinished = false;
-      this.onEvaluateStart(this.evaluatedGame?.fen());
-    },
-    startWorker() {
       this.worker = new Worker("src/lib/stockfish.js");
 
       this.worker.addEventListener("message", this.onHandleEvent);
 
       this.worker.postMessage("uci");
+
+      this.onEvaluateStart(this.evaluatedGame?.fen());
     },
-    onEvaluateStart(fen: string) {
-      this.worker.postMessage(`position fen ${fen}`);
-      this.worker.postMessage("go depth 16");
+    onEvaluateStart(fen?: string) {
+      this.worker?.postMessage(`position fen ${fen}`);
+      this.worker?.postMessage("go depth 16");
     },
     onBestMoveFound(best: string) {
-      //console.log(this.history)
-      //console.log("our best move is: ", best)
       const bestMove = best.match(/(?<=bestmove\s+).*?(?=\s+ponder)/gs)
 
       this.expectedMoves[this.currentMove] = bestMove != null ? bestMove[0] : "error";
-
-      //console.log('currentMove:', this.history[this.currentMove])
-
       this.evaluatedGame?.move(this.history[this.currentMove]);
       this.currentMove++;
    
-
       if (this.currentMove > this.history.length) {
-
-        this.printBlunders()
-
+        this.processResults()
         this.isEvaluationFinished = true;
 
         return;
       }
         
       this.onEvaluateStart(this.evaluatedGame?.fen())
-
-      this.printBlunders()
+      this.processResults()
     },
-    onHandleEvent(e: any) {
+    onHandleEvent(e: MessageEvent) {
       const data: string = e.data
 
       if (data.startsWith("bestmove")) {
         this.onBestMoveFound(data);
-      } else if (data.startsWith("info depth 16") && !data.includes('lowerbound')&& !data.includes('upperbound')) {
-        this.onScoreFound(data);
+      } else if (data.startsWith("info depth 16") &&
+        !data.includes('lowerbound') &&
+        !data.includes('upperbound')) {
+          this.onScoreFound(data);
       }
     },
     onScoreFound(data: string) {
-      var result = data.match(/(?<=cp\s+).*?(?=\s+nodes)/gs);
-      console.log(data);
+      const score = data.match(/(?<=cp\s+).*?(?=\s+nodes)/gs);
       const multiplier = this.evaluatedGame?.turn() === 'w' ? 1 : -1;
 
-      console.log(multiplier, this.evaluatedGame?.turn())
-
-      if (result != null) {
-        const resultToInt = parseInt(result[0])
-        console.log("Current points:", resultToInt * multiplier)
+      if (score != null) {
+        const resultToInt = parseInt(score[0])
 
         this.expectedPoints[this.currentMove] = resultToInt * multiplier;
         this.mateIn[this.currentMove] = NaN;
 
         return;
       }
-      result = data.match(/(?<=mate\s+).*?(?=\s+nodes)/gs);
-      if (result != null) {
-        console.log(result[0])
-        const resultToInt = parseInt(result[0])
-        console.log("Mate in:", resultToInt)
 
+      const mate = data.match(/(?<=mate\s+).*?(?=\s+nodes)/gs);
+      if (mate != null) {
+        const resultToInt = parseInt(mate[0])
         this.expectedPoints[this.currentMove] = (Math.sign(resultToInt) * Infinity) * multiplier
         this.mateIn[this.currentMove] = resultToInt * multiplier;
 
@@ -183,8 +167,6 @@ export const createTodoStore = (): StoreProps => {
         console.error("Invalid PGN");
         return false;
       }
-
-      console.log("Valid PGN");
 
       this.game = new Chess();
       this.evaluatedGame = new Chess();
