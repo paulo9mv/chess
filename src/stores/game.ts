@@ -9,6 +9,7 @@ export interface StoreI {
   reportMoves: Array<MoveStatus>,
   history: Array<any>,
   currentMove: number,
+  mateIn: Array<number>,
   currentMoveOnTheBoard: number,
   expectedPoints: Array<any>,
   foundPoints: Array<any>,
@@ -37,6 +38,7 @@ export const createTodoStore = (): StoreI => {
     currentMove: 0,
     bestMove: "",
     expectedPoints: [],
+    mateIn: [],
     expectedMoves: [],
     foundPoints: [],
     reportMoves: [],
@@ -151,6 +153,7 @@ export const createTodoStore = (): StoreI => {
         console.log("Current points:", resultToInt * multiplier)
 
         this.expectedPoints[this.currentMove] = resultToInt * multiplier;
+        this.mateIn[this.currentMove] = NaN;
 
         return;
       }
@@ -161,6 +164,7 @@ export const createTodoStore = (): StoreI => {
         console.log("Mate in:", resultToInt)
 
         this.expectedPoints[this.currentMove] = (Math.sign(resultToInt) * Infinity) * multiplier
+        this.mateIn[this.currentMove] = resultToInt * multiplier;
 
         return;
       }

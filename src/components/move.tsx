@@ -9,6 +9,7 @@ interface Props {
     currentMove: boolean
     status: MoveStatus
     score: number
+    mateIn: number
 }
 
 const useStyles = makeStyles(theme =>
@@ -35,7 +36,7 @@ const useStyles = makeStyles(theme =>
   )
  
 
-const Move: FC<Props> = ({index, move, currentMove, status, score}) => {
+const Move: FC<Props> = ({index, move, currentMove, status, score, mateIn}) => {
     const classes = useStyles()
     const color = classes[status]
     const bold = currentMove ? classes.bold : ""
@@ -53,14 +54,16 @@ const Move: FC<Props> = ({index, move, currentMove, status, score}) => {
       }
     }
 
-    const scoreRound = Number.isNaN(score) ? null : score > 0 ? `+${(score/100).toFixed(1)}` : (score/100).toFixed(1)
-  
+    const isFirstMove = score == undefined && mateIn == undefined
+
+    const scoreRound = Number.isNaN(score) ? null : Math.abs(score) == Infinity ? `M${Math.abs(mateIn)}` : score > 0 ? `+${(score/100).toFixed(1)}` : (score/100).toFixed(1)
+
     return (
       <Grid container>
         <Grid item xs={9}>
         <Box flexDirection="row" style={{display: 'flex', alignItems: 'center'}}>
             <Typography display="inline" className={bold}>
-                {`${index + 1}. ${move}    `} 
+                {`${index + 1}. ${move}`} 
             </Typography>
             <Avatar className={color} style={{ marginLeft: 6, height: '16px', width: '16px', fontSize: '12px' }}>
                 {getIconByStatus(status)}
@@ -71,9 +74,9 @@ const Move: FC<Props> = ({index, move, currentMove, status, score}) => {
         </Grid>
         <Grid item xs={3}>
           <Box style={{display: 'inline-flex', justifyContent: 'flex-end', alignItems: 'center'}}>
-          <Typography display="inline" className={bold} style={{fontSize: 10}}>
+          {!isFirstMove &&<Typography display="inline" className={bold} style={{fontSize: 10}}>
                 {scoreRound}
-            </Typography> 
+            </Typography> }
           </Box>
         
         </Grid>

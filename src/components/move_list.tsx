@@ -23,7 +23,7 @@ const Moves = () => {
   const moves = todoStore.history
 
 
-  const { currentMoveOnTheBoard, undo, setCurrentMoveOnTheBoard, move, reportMoves, expectedPoints } = todoStore
+  const { currentMoveOnTheBoard, undo, setCurrentMoveOnTheBoard, move, reportMoves, expectedPoints, mateIn } = todoStore
 
 
   return todoStore.history.length ? (
@@ -33,9 +33,10 @@ const Moves = () => {
             {moves.map((i, index) => {
               const status = reportMoves.length > index ? reportMoves[index] : "ok"
               const score = expectedPoints.length > index ? expectedPoints[index + 1] : NaN
+              const mateInX = mateIn.length > index ? mateIn[index + 1] : NaN
 
               return (<Grid key={`${index}_${i}`} item xs={6}>
-                <Move status={status} currentMove={index === currentMoveOnTheBoard - 1} index={index} move={i} score={score} />
+                <Move status={status} currentMove={index === currentMoveOnTheBoard - 1} index={index} move={i} score={score} mateIn={mateInX}/>
               </Grid>)
             })}
           </Grid>
