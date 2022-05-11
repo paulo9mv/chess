@@ -31,8 +31,3 @@ $ yarn dev
 
 :art: Design:
 - [Material-UI](https://material-ui.com/pt/)
-
-
-:cloud: Deploy:
-- [gh-pages](https://github.com/tschaub/gh-pages)
-
