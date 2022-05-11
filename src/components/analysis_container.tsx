@@ -1,4 +1,4 @@
-import { Card, createStyles, makeStyles } from "@material-ui/core"
+import { Box, Card, createStyles, makeStyles } from "@material-ui/core"
 import { observer } from "mobx-react-lite";
 import { useTodoStore } from "../context";
 import { StoreI } from "../stores/game";
@@ -9,8 +9,12 @@ import Moves from "./move_list"
 const useStyles = makeStyles(theme =>
   createStyles({
     card: {
-      height: '100%'
-    }
+      height: '100%',
+      display: 'flex'
+    },
+     box: {
+       padding: 16
+     }
   })
 )
 
@@ -20,7 +24,9 @@ const AnalysisContainer = () => {
     const { history } = todoStore;
 
   return <Card className={classes.card}>
+    <Box className={classes.box}>
     {history.length ? <Moves /> : <InputPgn />}
+    </Box>
   </Card>
 }
 

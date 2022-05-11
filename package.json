@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
     "chess.js": "^0.13.2",
     "mobx": "^6.5.0",
     "mobx-react-lite": "^3.4.0",
