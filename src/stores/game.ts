@@ -1,28 +1,24 @@
 import { ChessInstance, Chess } from "chess.js";
-import { observable, computed } from "mobx";
-import { observer } from "mobx-react-lite";
-import { urlToHttpOptions } from "url";
 import { MoveStatus } from "../components/move";
 
-export interface StoreI {
+export interface StoreProps {
   currentPgn: string,
+  currentMove: number,
+  currentMoveOnTheBoard: number,
+  game?: ChessInstance,
+  evaluatedGame?: ChessInstance,
+  worker: Worker,
   reportMoves: Array<MoveStatus>,
   history: Array<any>,
-  currentMove: number,
   mateIn: Array<number>,
-  currentMoveOnTheBoard: number,
   expectedPoints: Array<any>,
   foundPoints: Array<any>,
   expectedMoves: Array<any>
-  worker: any,
-  game?: ChessInstance,
-  evaluatedGame?: ChessInstance,
   startWorker: Function
   loadPgn: Function,
   onBestMoveFound: Function,
   onHandleEvent: any,
   onScoreFound: any,
-  bestMove: string,
   onEvaluateStart: any,
   printBlunders: any,
   startEvaluate: any,
@@ -33,21 +29,20 @@ export interface StoreI {
   resetState: any
 }
 
-export const createTodoStore = (): StoreI => {
+export const createTodoStore = (): StoreProps => {
   return {
     currentPgn: "",
     currentMove: 0,
-    bestMove: "",
+    currentMoveOnTheBoard: 0,
+    game: undefined,
+    evaluatedGame: undefined,
+    worker: null,
     expectedPoints: [],
     mateIn: [],
     expectedMoves: [],
     foundPoints: [],
     reportMoves: [],
     history: [],
-    worker: null,
-    game: undefined,
-    evaluatedGame: undefined,
-    currentMoveOnTheBoard: 0,
     isEvaluationFinished: true,
     setCurrentMoveOnTheBoard(value: number) {
       this.currentMoveOnTheBoard = value
@@ -89,7 +84,6 @@ export const createTodoStore = (): StoreI => {
     resetState() {
       this.currentPgn = ""
       this.currentMove = 0
-      this.bestMove = ""
       this.expectedPoints = []
       this.mateIn = []
       this.expectedMoves = []

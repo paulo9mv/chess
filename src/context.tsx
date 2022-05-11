@@ -1,16 +1,17 @@
+// Packages
 import React, { createContext, useContext } from "react";
-
-import { createTodoStore } from "./stores/game";
-
 import { useLocalObservable } from "mobx-react-lite";
 
-const TodoContext = createContext(null);
+// Store
+import { createTodoStore, StoreProps } from "./stores/game";
+
+const AppContext = createContext(null);
 
 export const TodoProvider = ({ children }: any) => {
-  const todoStore = useLocalObservable(createTodoStore) as any;
+  const store: any = useLocalObservable(createTodoStore);
 
   return (
-    <TodoContext.Provider value={todoStore}>{children}</TodoContext.Provider>
+    <AppContext.Provider value={store}>{children}</AppContext.Provider>
   );
 };
-export const useTodoStore = () => useContext<any>(TodoContext);
+export const useStore: () => StoreProps = () => useContext<any>(AppContext);

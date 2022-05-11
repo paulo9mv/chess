@@ -1,8 +1,8 @@
 import { Avatar, Box, createStyles, Grid, makeStyles, Typography } from "@material-ui/core";
 import { observer } from "mobx-react-lite";
 import { FC } from "react";
-import { useTodoStore } from "../context";
-import { StoreI } from "../stores/game";
+import { useStore } from "../context";
+import { StoreProps } from "../stores/game";
 import { MoveStatus } from "./move";
 
 const useStyles = makeStyles(theme =>
@@ -22,12 +22,16 @@ const useStyles = makeStyles(theme =>
     })
   )
 
-interface Props {
+interface ReportRowProps {
     type: MoveStatus
     quantity: number
 }
 
-const ReportRow: FC<Props> = ({type, quantity = 0}) => {
+interface ReportBlockProps {
+  report: Array<MoveStatus>
+}
+
+const ReportRow: FC<ReportRowProps> = ({type, quantity = 0}) => {
     const classes = useStyles()
     const color = classes[type]
 
@@ -50,7 +54,7 @@ const ReportRow: FC<Props> = ({type, quantity = 0}) => {
     </Box>
 }
 
-const ReportBlock: FC<any> = ({report}) => {
+const ReportBlock: FC<ReportBlockProps> = ({report}) => {
     const counts = {} as any;
 
     for (const num of report) {
@@ -65,8 +69,8 @@ const ReportBlock: FC<any> = ({report}) => {
 }
 
 const Report: FC = () => {
-    const todoStore = useTodoStore() as StoreI
-    const { reportMoves, isEvaluationFinished } = todoStore
+    const store = useStore() as StoreProps
+    const { reportMoves, isEvaluationFinished } = store
     const hasAnalysisFinished = reportMoves.length && isEvaluationFinished
 
     const whiteReport = reportMoves.filter((_, index) => index % 2 === 0)

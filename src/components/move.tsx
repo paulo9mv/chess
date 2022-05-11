@@ -1,4 +1,5 @@
-import { Avatar, Box, createStyles, Grid, Icon, makeStyles, Typography } from "@material-ui/core"
+// Packages
+import { Avatar, Box, createStyles, Grid, makeStyles, Typography } from "@material-ui/core"
 import { FC } from "react"
 
 export type MoveStatus = "ok" | "blunder" | "mistake" | "inaccuracy"
@@ -55,7 +56,10 @@ const Move: FC<Props> = ({ index, move, currentMove, status, score, mateIn }) =>
   }
 
   const isFirstMove = score == undefined && mateIn == undefined
-  const scoreRound = Number.isNaN(score) ? null : Math.abs(score) == Infinity ? `M${Math.abs(mateIn)}` : score > 0 ? `+${(score / 100).toFixed(1)}` : (score / 100).toFixed(1)
+  const scoreRound = Number.isNaN(score) ? null :
+    Math.abs(score) == Infinity ? `M${Math.abs(mateIn)}` :
+      score > 0 ? `+${(score / 100).toFixed(1)}` :
+        (score / 100).toFixed(1)
 
   return (
     <Grid container>

@@ -1,6 +1,6 @@
 import { Card, createStyles, makeStyles } from "@material-ui/core"
-import { useTodoStore } from "../context"
-import { StoreI } from "../stores/game"
+import { useStore } from "../context"
+import { StoreProps } from "../stores/game"
 
 import Board from "./board"
 

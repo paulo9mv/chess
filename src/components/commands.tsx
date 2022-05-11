@@ -4,14 +4,14 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ComputerIcon from '@material-ui/icons/Computer';
 import TrashIcon from '@material-ui/icons/Delete'
 import { FC } from "react"
-import { useTodoStore } from "../context"
-import { StoreI } from "../stores/game"
+import { useStore } from "../context"
+import { StoreProps } from "../stores/game"
 
 const Commands: FC = () => {
-    const todoStore = useTodoStore() as StoreI
-    const moves = todoStore.history
+    const store = useStore() as StoreProps
+    const moves = store.history
 
-    const { currentMoveOnTheBoard, undo, setCurrentMoveOnTheBoard, move, isEvaluationFinished, reportMoves } = todoStore
+    const { currentMoveOnTheBoard, undo, setCurrentMoveOnTheBoard, move, isEvaluationFinished, reportMoves } = store
 
     const handlePrevious = () => {
         undo();
@@ -39,12 +39,12 @@ const Commands: FC = () => {
 
             </Grid>
             <Grid item>
-                <Tooltip title="Run analysis"><IconButton color="primary" disabled={!isEvaluationFinished || reportMoves.length > 0} onClick={todoStore.startEvaluate}><ComputerIcon /></IconButton></Tooltip>
+                <Tooltip title="Run analysis"><IconButton color="primary" disabled={!isEvaluationFinished || reportMoves.length > 0} onClick={store.startEvaluate}><ComputerIcon /></IconButton></Tooltip>
 
             </Grid>
             <Grid item>
                 <Tooltip title="Delete analysis">
-                    <IconButton color="secondary" disabled={!isEvaluationFinished} onClick={todoStore.resetState}><TrashIcon /></IconButton>
+                    <IconButton color="secondary" disabled={!isEvaluationFinished} onClick={store.resetState}><TrashIcon /></IconButton>
                 </Tooltip>
 
             </Grid>
