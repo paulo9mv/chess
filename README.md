@@ -1,6 +1,6 @@
 # Chess Analysis ♟️
 
-Chess Analysis is a free tool that allows you to get reports from your own matches. Import your PGN and check it now at It's available at https://paulo9mv.github.io/chess
+Chess Analysis is a free tool that allows you to get reports from your own matches. Import your PGN and check it now.
 
 https://user-images.githubusercontent.com/17968732/167827897-716ef38b-f576-4c26-97d3-91d29516d3c4.mov
 
