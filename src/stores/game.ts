@@ -108,8 +108,9 @@ export const createTodoStore = (): StoreI => {
     onBestMoveFound(best: string) {
       //console.log(this.history)
       //console.log("our best move is: ", best)
+      const bestMove = best.match(/(?<=bestmove\s+).*?(?=\s+ponder)/gs)
 
-      this.expectedMoves[this.currentMove] = best;
+      this.expectedMoves[this.currentMove] = bestMove != null ? bestMove[0] : "error";
 
       //console.log('currentMove:', this.history[this.currentMove])
 

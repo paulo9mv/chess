@@ -14,8 +14,18 @@ const useStyles = makeStyles(theme =>
 
 const Board = () => {
     const todoStore = useTodoStore() as StoreI
-    const { currentMoveOnTheBoard } = todoStore
-    return <Chessboard position={todoStore.game?.fen() || 'start'}/>
+    const { currentMoveOnTheBoard, expectedMoves, history } = todoStore
+
+    const arrows: Array<Array<string>> = []
+    
+
+    if (expectedMoves.length -1 === history.length) {
+      expectedMoves.map(i => arrows.push([i.substr(0,2), i.substr(2)]))
+    }
+
+    console.log(arrows, currentMoveOnTheBoard, arrows[currentMoveOnTheBoard], expectedMoves, history.length)
+
+    return <Chessboard position={todoStore.game?.fen() || 'start'} customArrows={arrows.length ? [arrows[currentMoveOnTheBoard]] : []}/>
 }
 
 export default observer(Board)

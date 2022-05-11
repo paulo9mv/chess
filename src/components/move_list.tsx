@@ -23,7 +23,7 @@ const Moves = () => {
   const moves = todoStore.history
 
 
-  const { currentMoveOnTheBoard, undo, setCurrentMoveOnTheBoard, move, reportMoves, expectedPoints, mateIn } = todoStore
+  const { currentMoveOnTheBoard, reportMoves, expectedPoints, mateIn } = todoStore
 
 
   return todoStore.history.length ? (
