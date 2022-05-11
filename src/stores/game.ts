@@ -2,9 +2,11 @@ import { ChessInstance, Chess } from "chess.js";
 import { observable, computed } from "mobx";
 import { observer } from "mobx-react-lite";
 import { urlToHttpOptions } from "url";
+import { MoveStatus } from "../components/move";
 
 export interface StoreI {
   currentPgn: string,
+  reportMoves: Array<MoveStatus>,
   history: Array<any>,
   currentMove: number,
   currentMoveOnTheBoard: number,
@@ -13,6 +15,7 @@ export interface StoreI {
   expectedMoves: Array<any>
   worker: any,
   game?: ChessInstance,
+  evaluatedGame?: ChessInstance,
   startWorker: Function
   loadPgn: Function,
   onBestMoveFound: Function,
@@ -36,9 +39,11 @@ export const createTodoStore = (): StoreI => {
     expectedPoints: [],
     expectedMoves: [],
     foundPoints: [],
+    reportMoves: [],
     history: [],
     worker: null,
     game: undefined,
+    evaluatedGame: undefined,
     currentMoveOnTheBoard: 0,
     isEvaluationFinished: true,
     setCurrentMoveOnTheBoard(value: number) {
@@ -65,15 +70,18 @@ export const createTodoStore = (): StoreI => {
         }
 
         if (Math.abs(i) > 800) {
-          return "gafe"
+          return "blunder"
         } else if (Math.abs(i) > 400) {
-          return "erro"
+          return "mistake"
         } else if (Math.abs(i) > 80) {
-          return "imprecisao"
+          return "inaccuracy"
         } else {
           return "ok"
         }
       })
+
+      impr.shift()
+      this.reportMoves = impr
 
       console.log(impr)
       console.log("expectedPoints", arr)
@@ -82,7 +90,7 @@ export const createTodoStore = (): StoreI => {
     startEvaluate() {
       this.startWorker();
       this.isEvaluationFinished = false;
-      this.onEvaluateStart(this.game?.fen());
+      this.onEvaluateStart(this.evaluatedGame?.fen());
     },
     startWorker() {
       this.worker = new Worker("src/lib/stockfish.js");
@@ -103,10 +111,9 @@ export const createTodoStore = (): StoreI => {
 
       //console.log('currentMove:', this.history[this.currentMove])
 
-      this.game?.move(this.history[this.currentMove]);
+      this.evaluatedGame?.move(this.history[this.currentMove]);
       this.currentMove++;
-
-      //console.log(this.game?.game_over())    
+   
 
       if (this.currentMove > this.history.length) {
         console.log(this.expectedPoints)
@@ -119,7 +126,7 @@ export const createTodoStore = (): StoreI => {
         return;
       }
         
-      this.onEvaluateStart(this.game?.fen())
+      this.onEvaluateStart(this.evaluatedGame?.fen())
 
       this.printBlunders()
     },
@@ -135,9 +142,9 @@ export const createTodoStore = (): StoreI => {
     onScoreFound(data: string) {
       var result = data.match(/(?<=cp\s+).*?(?=\s+nodes)/gs);
       console.log(data);
-      const multiplier = this.game?.turn() === 'w' ? 1 : -1;
+      const multiplier = this.evaluatedGame?.turn() === 'w' ? 1 : -1;
 
-      console.log(multiplier, this.game?.turn())
+      console.log(multiplier, this.evaluatedGame?.turn())
 
       if (result != null) {
         const resultToInt = parseInt(result[0])
@@ -170,6 +177,7 @@ export const createTodoStore = (): StoreI => {
       console.log("Valid PGN");
 
       this.game = new Chess();
+      this.evaluatedGame = new Chess();
       this.currentPgn = pgn;
       this.history = tempGame.history()
 

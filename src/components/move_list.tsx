@@ -31,18 +31,23 @@ const Moves = () => {
   const moves = todoStore.history
 
   
-  const { game, currentMoveOnTheBoard, undo, setCurrentMoveOnTheBoard, move } = todoStore
+  const { currentMoveOnTheBoard, undo, setCurrentMoveOnTheBoard, move, reportMoves } = todoStore
 
 
   return todoStore.history.length ? <Box><Grid container>
-    {moves.map((i, index) => (<Grid key={`${index}_${i}`} item xs={6}>
-      <Move status="ok" currentMove={index === currentMoveOnTheBoard - 1} index={index} move={i}/>
-    </Grid>))}
+    {moves.map((i, index) => {
+      const status = reportMoves.length > index ? reportMoves[index] : "ok"
+
+      return (<Grid key={`${index}_${i}`} item xs={6}>
+      <Move status={status} currentMove={index === currentMoveOnTheBoard - 1} index={index} move={i}/>
+    </Grid>)
+    })}
   </Grid>
   <Button variant="contained" disabled={currentMoveOnTheBoard === 0}
       onClick={handlePrevious}>Previous</Button>
     <Button variant="contained" disabled={currentMoveOnTheBoard === moves.length}
       onClick={handleNext}>Next</Button>
+      <Button disabled={!todoStore.currentPgn} onClick={todoStore.startEvaluate}>Analyze</Button>
   </Box> : null
 }
 

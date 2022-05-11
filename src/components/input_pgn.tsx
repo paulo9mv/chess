@@ -28,9 +28,6 @@ const InputPgn = () => {
                 value={text}
             />
             <Button onClick={handleVerify}>Verify</Button>
-            <Button disabled={!todoStore.currentPgn} onClick={todoStore.startEvaluate}>Analyze</Button>
-
-
         </Box>
     )
 }

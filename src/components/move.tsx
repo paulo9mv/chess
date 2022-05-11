@@ -1,7 +1,7 @@
 import { Box, createStyles, makeStyles, Typography } from "@material-ui/core"
 import { FC } from "react"
 
-type MoveStatus = "ok" | "blunder" | "mistake" | "inaccuracy"
+export type MoveStatus = "ok" | "blunder" | "mistake" | "inaccuracy"
 
 interface Props {
     index: number
