@@ -28,8 +28,8 @@ const Moves = () => {
 
 
   return store.history.length ? (
-      <Grid container direction="column" justifyContent="space-between" style={{height: '100%'}}>
-        <Grid item xs={8} style={{maxWidth: '100%', overflowY: 'scroll'}}>
+      <Grid container direction="column" justifyContent="space-between">
+        <Grid item xs={12} style={{maxWidth: '100%'}}>
           <Grid container>
             {moves.map((i, index) => {
               const status = reportMoves.length > index ? reportMoves[index] : "ok"
@@ -42,10 +42,10 @@ const Moves = () => {
             })}
           </Grid>
         </Grid>
-        <Grid item xs={2} style={{maxWidth: '100%'}}>
+        <Grid item xs={12} style={{maxWidth: '100%'}}>
           <Report />
         </Grid>
-        <Grid item xs={2} style={{maxWidth: '100%'}}>
+        <Grid item xs={12} style={{maxWidth: '100%'}}>
           <Commands />
         </Grid>
       </Grid>

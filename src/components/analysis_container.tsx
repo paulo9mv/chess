@@ -9,11 +9,13 @@ import Moves from "./move_list"
 const useStyles = makeStyles(theme =>
   createStyles({
     card: {
-      height: '100%',
-      display: 'flex'
+      display: 'flex',
+      maxHeight: '80vh',
+      overflowY: 'auto'
     },
      box: {
-       padding: 16
+       padding: 16,
+       width: '100%'
      }
   })
 )
