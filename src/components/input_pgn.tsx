@@ -10,8 +10,10 @@ import { StoreProps } from "../stores/game"
 const InputPgn = () => {
   const store: StoreProps = useStore()
   const [text, setText] = useState<string>("")
+  const [error, setError] = useState<boolean>(false)
   const handleVerify = () => {
-    store.loadPgn(text)
+    const success = store.loadPgn(text)
+    setError(!success)
   }
 
   return (
@@ -23,9 +25,11 @@ const InputPgn = () => {
           label="PGN"
           multiline
           minRows={4}
-          onChange={e => setText(e.target.value)}
+          onChange={e => { setText(e.target.value); setError(false) }}
           value={text}
           fullWidth
+          error={error}
+          helperText={error ? "Invalid PGN. Please check the format and try again." : ""}
         />
       </Box>
       <Box style={{ marginTop: 4 }}>
