@@ -97,13 +97,11 @@ export const createTodoStore = (): StoreProps => {
     },
     startEvaluate() {
       this.isEvaluationFinished = false;
-      this.worker = new Worker("src/lib/stockfish.js");
+      this.worker = new Worker(`${import.meta.env.BASE_URL}stockfish.js`);
 
       this.worker.addEventListener("message", (e) => this.onHandleEvent(e));
 
       this.worker.postMessage("uci");
-
-      this.onEvaluateStart(this.evaluatedGame?.fen());
     },
     onEvaluateStart(fen?: string) {
       this.worker?.postMessage(`position fen ${fen}`);
@@ -128,7 +126,9 @@ export const createTodoStore = (): StoreProps => {
     onHandleEvent(e: MessageEvent) {
       const data: string = e.data
 
-      if (data.startsWith("bestmove")) {
+      if (data.startsWith("uciok")) {
+        this.onEvaluateStart(this.evaluatedGame?.fen());
+      } else if (data.startsWith("bestmove")) {
         this.onBestMoveFound(data);
       } else if (data.startsWith("info depth 16") &&
         !data.includes('lowerbound') &&
