@@ -99,7 +99,7 @@ export const createTodoStore = (): StoreProps => {
       this.isEvaluationFinished = false;
       this.worker = new Worker("src/lib/stockfish.js");
 
-      this.worker.addEventListener("message", this.onHandleEvent);
+      this.worker.addEventListener("message", (e) => this.onHandleEvent(e));
 
       this.worker.postMessage("uci");
 
@@ -116,7 +116,7 @@ export const createTodoStore = (): StoreProps => {
       this.evaluatedGame?.move(this.history[this.currentMove]);
       this.currentMove++;
    
-      if (this.currentMove > this.history.length) {
+      if (this.currentMove >= this.history.length) {
         this.processResults()
         this.isEvaluationFinished = true;
 
@@ -124,7 +124,6 @@ export const createTodoStore = (): StoreProps => {
       }
         
       this.onEvaluateStart(this.evaluatedGame?.fen())
-      this.processResults()
     },
     onHandleEvent(e: MessageEvent) {
       const data: string = e.data
@@ -172,6 +171,13 @@ export const createTodoStore = (): StoreProps => {
       this.evaluatedGame = new Chess();
       this.currentPgn = pgn;
       this.history = tempGame.history()
+      this.currentMoveOnTheBoard = 0
+      this.currentMove = 0
+      this.expectedPoints = []
+      this.mateIn = []
+      this.expectedMoves = []
+      this.foundPoints = []
+      this.reportMoves = []
 
       return true
     },

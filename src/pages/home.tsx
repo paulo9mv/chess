@@ -21,20 +21,14 @@ const Home: FC = () => {
       </Card>
     </Grid>
     <Grid item xs={12}>
-      <Grid container spacing={2}>
-        <Grid item xs={2} />
-        <Grid item xs={8}>
-          <Grid container spacing={2}>
-            <Grid item xs={7}>
-              <BoardContainer />
-            </Grid>
-            <Grid item xs={4}>
-              {!isEvaluationFinished && <LinearProgress value={(reportMoves.length / history.length) * 100} variant="determinate" />}
-              <AnalysisContainer />
-            </Grid>
-          </Grid>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={12} sm={6} md={5}>
+          <BoardContainer />
         </Grid>
-        <Grid item xs={2} />
+        <Grid item xs={12} sm={6} md={5}>
+          {!isEvaluationFinished && <LinearProgress value={(reportMoves.length / history.length) * 100} variant="determinate" />}
+          <AnalysisContainer />
+        </Grid>
       </Grid>
     </Grid>
   </Grid>

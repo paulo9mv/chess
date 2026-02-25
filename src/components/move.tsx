@@ -66,7 +66,7 @@ const Move: FC<Props> = ({ index, move, currentMove, status, score, mateIn }) =>
       <Grid item xs={9}>
         <Box flexDirection="row" style={{ display: 'flex', alignItems: 'center' }}>
           <Typography display="inline" className={bold}>
-            {`${index + 1}. ${move}`}
+            {index % 2 === 0 ? `${Math.floor(index / 2) + 1}. ${move}` : move}
           </Typography>
           <Avatar className={color} style={{ marginLeft: 6, height: '16px', width: '16px', fontSize: '12px' }}>
             {getIconByStatus(status)}
